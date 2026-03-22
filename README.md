@@ -1,6 +1,6 @@
 <div align="center">
   <h1>Sp Scoreboard</h1>
-  <p>The Most Advanced, Lightweight, and Comprehensive FiveM Scoreboard Script for ESX & QBCore.</p>
+  <p>Advanced, Lightweight, and Comprehensive FiveM Scoreboard Script for ESX & QBCore.</p>
 </div>
 
 <br>
