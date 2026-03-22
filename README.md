@@ -50,5 +50,6 @@
 * `/removevip [id]` - Removes VIP Status from a player (Admin/Console only).
 
 <br>
+<img width="1393" height="901" alt="image" src="https://github.com/user-attachments/assets/290f19c7-1d54-4822-9165-8185d25be780" />
 
 **Sp_Scoreboard**
