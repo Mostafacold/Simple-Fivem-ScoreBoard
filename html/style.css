@@ -1,0 +1,597 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: transparent;
+    overflow: hidden;
+}
+
+.scoreboard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+    z-index: 9999;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scoreboard.hidden {
+    display: none;
+}
+
+.scoreboard.closing {
+    opacity: 0;
+}
+
+@keyframes menuOpen {
+    0% { opacity: 0; transform: scale(0.96) translateY(-20px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes menuClose {
+    0% { opacity: 1; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.96) translateY(-20px); }
+}
+
+.scoreboard.closing .scoreboard-container {
+    animation: menuClose 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+}
+
+/* Dark Purple Theme */
+.scoreboard-container {
+    width: 90%;
+    max-width: 1400px;
+    height: 85vh;
+    /* تقييد الطول لنسبة من الشاشة */
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(135deg, #0a0a0f 0%, #150f1f 100%);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    animation: menuOpen 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    pointer-events: auto;
+}
+
+/* Header */
+.title {
+    display: none;
+}
+
+.server-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #d8b4fe;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.6);
+}
+
+.players-count {
+    color: #fff;
+    background: rgba(147, 51, 234, 0.15);
+    padding: 5px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(147, 51, 234, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.players-count svg {
+    color: #d8b4fe;
+}
+
+.job-card {
+    flex: 1;
+    min-width: 0;
+    /* للسماح بتصغير العنصر بدل النزول للسطر */
+    background: rgba(20, 10, 30, 0.8);
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    border-radius: 12px;
+    padding: 10px 15px;
+    /* تصغير البادينج قليلاً لمساحة أفضل */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.job-card:hover {
+    background: rgba(147, 51, 234, 0.15);
+    border-color: #a855f7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 20px rgba(147, 51, 234, 0.2);
+}
+
+
+.job-icon {
+    font-size: 24px;
+    /* تصغير الأيقونة قليلاً لتوفير المساحة */
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    /* منع تصغير الأيقونة */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(147, 51, 234, 0.2);
+    border-radius: 10px;
+    color: #fff;
+}
+
+.job-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    /* ضروري لعمل Ellipsis بشكل صحيح */
+}
+
+.job-label {
+    font-size: 13px;
+    color: #94a3b8;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* إضافة نقاط عند زيادة النص */
+}
+
+.job-count {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #e9d5ff;
+}
+
+.job-count svg {
+    color: #a855f7;
+}
+
+/* Filters & Search Header */
+.filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+/* Search Box Styles */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 30px; /* متناسق مع الأزرار */
+    padding: 8px 18px;
+    gap: 10px;
+    min-width: 250px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-container:focus-within {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(168, 85, 247, 0.5);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+}
+
+.search-container svg {
+    color: #94a3b8;
+}
+
+.search-container input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 14px;
+    width: 100%;
+    font-family: inherit;
+}
+
+.search-container input::placeholder {
+    color: #64748b;
+}
+
+/* Animations (يتم تطبيقها على المربعات الفردية) */
+@keyframes popIn {
+    0% { opacity: 0; transform: translateY(10px) scale(0.98); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tab-btn {
+    background: rgba(20, 10, 30, 0.6);
+    border: 1px solid rgba(147, 51, 234, 0.2);
+    color: #a8a29e;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.tab-btn:hover {
+    background: rgba(147, 51, 234, 0.25);
+    border-color: #d8b4fe;
+    color: #fff;
+}
+
+.tab-btn.active {
+    background: #7e22ce !important;
+    border-color: #a855f7 !important;
+    color: #fff;
+    box-shadow: 0 0 20px rgba(126, 34, 206, 0.6);
+}
+
+/* Header Sections */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 15px;
+}
+
+.players-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
+}
+
+.players-label {
+    font-size: 11px;
+    color: #a8a29e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.separator {
+    color: #a8a29e;
+    font-weight: 400;
+}
+
+.job-stats {
+    display: flex;
+    /* تغيير الجريد لمرونة أكثر */
+    justify-content: space-between;
+    gap: 10px;
+    /* تقليل الفراغ للحفاظ على مسافة مريحة */
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.exit-btn {
+    background: rgba(20, 10, 30, 0.6);
+    border: 1px solid rgba(147, 51, 234, 0.3);
+    color: #d8b4fe;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.exit-btn:hover {
+    background: rgba(126, 34, 206, 0.3);
+    border-color: #a855f7;
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 0 15px rgba(126, 34, 206, 0.4);
+}
+
+/* VIP Badge Styles */
+.vip-badge {
+    font-size: 9px;
+    background: linear-gradient(90deg, #FFD700, #FDB931);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.players-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 5px;
+    /* تصغير البادينج قليلاً لتجنب ظهور شريط التمرير الأفقي بشكل خاطئ */
+}
+
+/* تنسيقات حاوية الجدول (الاسكرول والارتفاع) */
+.table-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 15px;
+    margin-right: -5px;
+    /* لتوازن الفراغ مع شريط التمرير */
+}
+
+/* تنسيقات شريط التمرير Scrollbar */
+.table-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background: rgba(20, 10, 30, 0.4);
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background: rgba(147, 51, 234, 0.4);
+    border-radius: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(147, 51, 234, 0.8);
+}
+
+.player-card {
+    background: rgba(20, 10, 30, 0.6);
+    border: 1px solid rgba(147, 51, 234, 0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.player-card:hover {
+    background: rgba(147, 51, 234, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    border-color: rgba(147, 51, 234, 0.3);
+}
+
+.player-card-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ID Badge in Card */
+.player-card .id-badge {
+    background: rgba(126, 34, 206, 0.2);
+    color: #d8b4fe;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    min-width: 30px;
+    text-align: center;
+    border: 1px solid rgba(147, 51, 234, 0.2);
+}
+
+/* Avatar Wrapper */
+.avatar-wrapper {
+    position: relative;
+    width: 38px;
+    height: 38px;
+}
+
+.player-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 2px solid rgba(147, 51, 234, 0.2);
+    object-fit: cover;
+}
+
+.vip-crown-overlay {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    font-size: 16px;
+    transform: rotate(-20deg);
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+}
+
+/* Player Info Text */
+.player-info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.name-row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.player-name-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: #f3e8ff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+
+.details-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.playtime-badge {
+    font-size: 10px;
+    color: #c084fc;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.playtime-badge::before {
+    content: '⏱️';
+    font-size: 9px;
+}
+
+/* Right Side of Card */
+.player-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.job-info-right {
+    display: flex;
+    align-items: center;
+}
+
+.job-text {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Ping Indicator */
+.ping-indicator {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ping-value {
+    font-size: 11px;
+    font-weight: 500;
+    color: #64748b;
+}
+
+.signal-bars {
+    display: flex;
+    gap: 1.5px;
+    align-items: flex-end;
+    height: 10px;
+}
+
+.bar {
+    width: 2.5px;
+    background: #334155;
+    border-radius: 1px;
+}
+
+.bar:nth-child(1) {
+    height: 40%;
+}
+
+.bar:nth-child(2) {
+    height: 70%;
+}
+
+.bar:nth-child(3) {
+    height: 100%;
+}
+
+/* Ping Colors */
+.ping-good .bar.active {
+    background: #4ade80;
+}
+
+.ping-good .ping-value {
+    color: #4ade80;
+}
+
+.ping-medium .bar.active {
+    background: #facc15;
+}
+
+.ping-medium .ping-value {
+    color: #facc15;
+}
+
+.ping-high .bar.active {
+    background: #ef4444;
+}
+
+.ping-high .ping-value {
+    color: #ef4444;
+}
+
+.player-card.special-role {
+    background: linear-gradient(90deg, rgba(20, 10, 30, 0.8) 0%, rgba(147, 51, 234, 0.1) 100%);
+}
+
+.player-card.admin-role {
+    border-color: rgba(147, 51, 234, 0.3);
+}
+
+/* Responsive Grid */
+@media (max-width: 1200px) {
+    .players-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 Columns on laptops */
+    }
+}
+
+@media (max-width: 768px) {
+    .players-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .job-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .job-stats {
+        grid-template-columns: 1fr;
+    }
+}
