@@ -51,4 +51,4 @@
 
 <br>
 
-**Sp_Scoreboard | by Sp**
+**Sp_Scoreboard**
